@@ -13,8 +13,7 @@ describe("ERC-20 Lab app", () => {
     app.render("/");
 
     expect([...document.querySelectorAll(".hero-title-line")].map((line) => line.textContent)).toEqual([
-      "ERC-20을",
-      "읽지만 말고",
+      "ERC-20을 읽지만 말고",
       "직접 체험해보세요.",
     ]);
     expect([...document.querySelectorAll(".hero-lead-line")].map((line) => line.textContent)).toEqual([
