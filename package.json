@@ -8,9 +8,9 @@
   },
   "scripts": {
     "generate:sources": "node scripts/generate-solidity-sources.mjs",
-    "predev": "npm run generate:sources",
+    "predev": "node scripts/generate-solidity-sources.mjs",
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "npm run generate:sources",
+    "prebuild": "node scripts/generate-solidity-sources.mjs",
     "build": "vite build && node scripts/create-sites-worker.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -32,6 +32,7 @@
     "happy-dom": "^20.10.6",
     "typescript": "^7.0.2",
     "vite": "^8.1.4",
+    "vite-plugin-node-polyfills": "^0.28.0",
     "vitest": "^4.1.10"
   }
 }

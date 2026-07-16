@@ -31,4 +31,3 @@ Validation runs before state mutation or network writes. Errors show the technic
 ## Testing and completion
 
 Vitest covers simulator atomicity and events, unit conversion, storage recovery, and token-generator option combinations. TypeScript checking, tests, and production build must all pass. Browser-only wallet and Sepolia actions remain dependent on an injected wallet, test ETH, and an optional `VITE_ALLOWANCE_PLAYGROUND_ADDRESS`; the README documents these prerequisites and the helper-contract deployment flow.
-

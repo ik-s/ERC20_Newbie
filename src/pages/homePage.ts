@@ -1,0 +1,50 @@
+import { APP_NAME } from "../config";
+import type { AppState } from "../state/store";
+import { el, routeLink } from "../utils/dom";
+import { renderProgressStepper } from "../components/progressStepper";
+
+export function renderHomePage(state: AppState): HTMLElement {
+  const progress = state.persisted.progress;
+  const done = new Set([...progress.completedLessons, ...progress.completedExercises]).size;
+  return el("main", {},
+    el("section", { className: "hero hero-dark" },
+      el("div", { className: "hero-copy" },
+        el("p", { className: "eyebrow on-dark", text: `${APP_NAME} · WEB3 BEGINNER TRACK` }),
+        el("h1", { text: "ERC-20을 읽지만 말고 직접 실행해보세요." }),
+        el("p", { className: "hero-lead", text: "토큰의 잔액을 확인하고, 전송하고, 사용 권한을 승인한 뒤 나만의 토큰을 Sepolia에 배포해보세요." }),
+        el("div", { className: "hero-actions" },
+          routeLink("지갑 연결 없이 시작하기", "/learn", "button button-primary button-large"),
+          progress.lastVisitedPath !== "/" ? routeLink("마지막 학습 이어하기", progress.lastVisitedPath, "button button-dark") : null,
+        ),
+        el("p", { className: "safety-note", text: "● 모든 네트워크 실습은 Ethereum Sepolia 테스트넷에서만 작동합니다." }),
+      ),
+      el("div", { className: "hero-console", attrs: { "aria-label": "ERC-20 상태 미리보기" } },
+        el("div", { className: "console-top" }, el("span", { text: "LAB token simulation" }), el("span", { className: "status-dot", text: "SIMULATION" })),
+        el("div", { className: "token-orbit" },
+          el("div", { className: "token-coin coin-a", text: "L" }),
+          el("div", { className: "token-coin coin-b", text: "L" }),
+          el("div", { className: "token-coin coin-c", text: "L" }),
+        ),
+        el("div", { className: "balance-preview" },
+          el("div", {}, el("span", { text: "Alice" }), el("strong", { text: "1,000 LAB" })),
+          el("div", {}, el("span", { text: "Bob" }), el("strong", { text: "100 LAB" })),
+          el("div", {}, el("span", { text: "DEX allowance" }), el("strong", { text: "0 LAB" })),
+        ),
+      ),
+    ),
+    el("section", { className: "section roadmap-section" },
+      el("div", { className: "section-heading" },
+        el("div", {}, el("p", { className: "eyebrow", text: "LEARNING ROADMAP" }), el("h2", { text: "다섯 단계면 토큰이 보입니다." })),
+        el("div", { className: "progress-ring", attrs: { "aria-label": `학습 항목 ${done}개 완료` } },
+          el("strong", { text: `${Math.min(100, Math.round((done / 12) * 100))}%` }),
+          el("span", { text: "진행률" }),
+        ),
+      ),
+      renderProgressStepper(progress),
+    ),
+    el("section", { className: "section concept-teaser" },
+      el("div", {}, el("p", { className: "eyebrow", text: "ONE STANDARD" }), el("h2", { text: "하나의 규칙이 모든 토큰을 연결합니다." }), el("p", { text: "지갑과 거래소가 처음 보는 토큰도 잔액을 읽고 전송할 수 있는 이유를 직접 확인해보세요." })),
+      routeLink("ERC-20 표준 이해하기 →", "/learn", "text-link"),
+    ),
+  );
+}
