@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createApp } from "../src/app";
 
 describe("ERC-20 Lab app", () => {
@@ -36,6 +36,29 @@ describe("ERC-20 Lab app", () => {
     expect(document.body.textContent).toContain("실행 전");
     expect(document.body.textContent).toContain("Solidity");
     expect(document.body.textContent).toContain("TypeScript");
+  });
+
+  it("renders an accessible function lab back link with a list fallback", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/functions/total-supply");
+
+    const backLink = document.querySelector<HTMLAnchorElement>(".function-back-link");
+    expect(backLink?.textContent).toBe("<");
+    expect(backLink?.getAttribute("href")).toBe("/functions");
+    expect(backLink?.getAttribute("aria-label")).toBe("이전 화면으로 돌아가기");
+  });
+
+  it("uses browser history when a previous screen exists", () => {
+    window.history.pushState({}, "", "/functions");
+    window.history.pushState({}, "", "/functions/total-supply");
+    const backSpy = vi.spyOn(window.history, "back").mockImplementation(() => undefined);
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/functions/total-supply");
+
+    document.querySelector<HTMLAnchorElement>(".function-back-link")!.click();
+
+    expect(backSpy).toHaveBeenCalledOnce();
+    backSpy.mockRestore();
   });
 
   it("executes transfer and shows changed balances and event", () => {

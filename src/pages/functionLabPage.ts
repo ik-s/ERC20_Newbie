@@ -3,7 +3,7 @@ import { renderEventLog } from "../components/eventLog";
 import { ACCOUNTS, type AccountName, TokenSimulator } from "../erc20/simulator";
 import { getLesson } from "../erc20/functionLessons";
 import type { AppStore } from "../state/store";
-import { button, el, field } from "../utils/dom";
+import { button, el, field, routeLink } from "../utils/dom";
 import { formatLab } from "../utils/format";
 
 const ACCOUNT_LABELS: Record<AccountName, string> = { alice: "Alice", bob: "Bob", dex: "DEX" };
@@ -104,10 +104,19 @@ export function renderFunctionLabPage(key: string, store: AppStore): HTMLElement
 
   execution.append(controls, el("div", { className: "button-row" }, button(`${lesson.name} 실행`, { className: "button button-primary", action: "execute", onClick: execute }), button("초기 상태로 되돌리기", { className: "button button-secondary", onClick: reset })), result, beforeArea);
   const eventContainer = el("div", {}, renderEventLog(token.events));
+  const backLink = routeLink("<", "/functions", "function-back-link");
+  backLink.setAttribute("aria-label", "이전 화면으로 돌아가기");
+  backLink.addEventListener("click", (event) => {
+    if (window.history.length <= 1) return;
+    event.preventDefault();
+    event.stopPropagation();
+    window.history.back();
+  });
 
   const factRows: Array<readonly [string, string]> = [["호출하는 사람", lesson.caller], ["입력값", lesson.inputs], ["반환값", lesson.returns], ["상태 변경", lesson.stateChange], ["이벤트", lesson.event]];
   return el("main", {},
     el("section", { className: "page-hero function-hero" },
+      backLink,
       el("div", { className: `function-badge ${lesson.kind.toLowerCase()}`, text: lesson.kind }),
       el("h1", { text: lesson.name }),
       el("code", { className: "signature", text: lesson.signature }),
