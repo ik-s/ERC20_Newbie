@@ -12,7 +12,18 @@ describe("ERC-20 Lab app", () => {
     const app = createApp(document.querySelector("#app")!);
     app.render("/");
 
-    expect(document.querySelector("h1")?.textContent).toContain("ERC-20을 읽지만 말고");
+    expect([...document.querySelectorAll(".hero-title-line")].map((line) => line.textContent)).toEqual([
+      "ERC-20을",
+      "읽지만 말고",
+      "직접 체험해보세요.",
+    ]);
+    expect([...document.querySelectorAll(".hero-lead-line")].map((line) => line.textContent)).toEqual([
+      "토큰의 잔액을 확인하고, 전송하고,",
+      "사용 권한을 승인한 뒤",
+      "나만의 토큰을 Sepolia에 배포해보세요.",
+    ]);
+    expect(document.querySelector(".roadmap-section h2")?.textContent).toBe("다섯 단계면 ERC-20을 정복할 수 있습니다.");
+    expect(document.querySelector(".concept-teaser-title")?.textContent).toBe("하나의 규칙이 모든 토큰을 연결합니다.");
     expect(document.body.textContent).toContain("지갑 연결 없이 시작하기");
     expect(document.querySelectorAll("[data-roadmap-step]")).toHaveLength(5);
   });
