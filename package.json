@@ -1,0 +1,37 @@
+{
+  "name": "erc20-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "generate:sources": "node scripts/generate-solidity-sources.mjs",
+    "predev": "npm run generate:sources",
+    "dev": "vite --host 0.0.0.0",
+    "prebuild": "npm run generate:sources",
+    "build": "vite build && node scripts/create-sites-worker.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src tests"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/view": "^6.43.6",
+    "@openzeppelin/contracts": "^5.6.1",
+    "codemirror": "^6.0.2",
+    "solc": "^0.8.36",
+    "viem": "^2.55.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "eslint": "^10.7.0",
+    "happy-dom": "^20.10.6",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
+  }
+}
