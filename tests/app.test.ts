@@ -38,6 +38,32 @@ describe("ERC-20 Lab app", () => {
     expect(document.body.textContent).toContain("TypeScript");
   });
 
+  it("moves the six rules from the concept page to function practice", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/learn");
+
+    expect(document.body.textContent).not.toContain("THE SIX RULES");
+    expect(document.querySelectorAll(".function-link")).toHaveLength(0);
+    const start = [...document.querySelectorAll<HTMLButtonElement>("button")]
+      .find((node) => node.textContent === "함수 실습 시작")!;
+
+    start.click();
+
+    expect(window.location.pathname).toBe("/functions");
+    expect(document.body.textContent).toContain("STEP 2 · 함수 실습");
+    expect(document.body.textContent).toContain("THE SIX RULES");
+    expect(document.querySelectorAll(".function-link")).toHaveLength(6);
+    expect(document.body.textContent).toContain("1,000,000,000,000,000,000");
+    expect(app.store.getState().persisted.progress.completedLessons).toContain("step-1");
+  });
+
+  it("shows step 2 context on function detail pages", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/functions/transfer");
+
+    expect(document.querySelector(".function-step-label")?.textContent).toBe("STEP 2 · 함수 실습");
+  });
+
   it("renders an accessible function lab back link with a list fallback", () => {
     const app = createApp(document.querySelector("#app")!);
     app.render("/functions/total-supply");

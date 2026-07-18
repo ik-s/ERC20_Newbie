@@ -117,6 +117,7 @@ export function renderFunctionLabPage(key: string, store: AppStore): HTMLElement
   return el("main", {},
     el("section", { className: "page-hero function-hero" },
       backLink,
+      el("p", { className: "eyebrow function-step-label", text: "STEP 2 · 함수 실습" }),
       el("div", { className: `function-badge ${lesson.kind.toLowerCase()}`, text: lesson.kind }),
       el("h1", { text: lesson.name }),
       el("code", { className: "signature", text: lesson.signature }),
