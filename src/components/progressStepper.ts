@@ -1,7 +1,7 @@
 import type { LearningProgress } from "../types";
 import { el } from "../utils/dom";
 
-const STEPS = ["이해하기", "함수 실행", "코드 확인", "코드 수정", "테스트넷 배포"];
+const STEPS = ["이해하기", "함수 실습", "코드 확인 및 수정", "테스트넷 배포"];
 
 export function renderProgressStepper(progress: LearningProgress): HTMLElement {
   const completed = new Set(progress.completedLessons);

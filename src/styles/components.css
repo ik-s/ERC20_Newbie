@@ -14,7 +14,7 @@
 .text-link { color: var(--blue); font-weight: 650; }
 .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 44px; }
 .section-heading h2 { margin-bottom: 0; }
-.progress-stepper { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 0; list-style: none; }
+.progress-stepper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0; list-style: none; }
 .progress-stepper li { min-height: 170px; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; border-radius: var(--radius-lg); background: var(--soft); color: var(--body); }
 .progress-stepper li.is-complete { background: #edf3ff; color: var(--blue); }
 .step-index { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: white; color: var(--ink); font-weight: 700; }

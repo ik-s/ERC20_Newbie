@@ -12,7 +12,14 @@ export function renderFunctionsPage(): HTMLElement {
       el("p", { className: "eyebrow", text: "THE SIX RULES" }),
       el("h2", { text: "ERC-20의 여섯 가지 핵심 함수를 눌러보세요." }),
       el("div", { className: "function-link-grid" },
-        ...FUNCTION_LESSONS.map((lesson) => routeLink(lesson.name, `/functions/${lesson.key}`, "function-link")),
+        ...FUNCTION_LESSONS.map((lesson) => {
+          const link = routeLink("", `/functions/${lesson.key}`, "function-link");
+          link.append(
+            el("strong", { className: "function-link-name", text: lesson.name }),
+            el("span", { className: "function-link-summary", text: lesson.summary }),
+          );
+          return link;
+        }),
       ),
       el("div", { className: "decimals-card" },
         el("div", {}, el("span", { text: "표시 수량" }), el("strong", { text: "1 LAB" })),

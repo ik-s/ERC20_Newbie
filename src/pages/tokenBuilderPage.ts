@@ -92,7 +92,7 @@ export function renderTokenBuilderPage(store: AppStore, refresh: () => void): HT
   );
 
   return el("main", {},
-    el("section", { className: "page-hero" }, el("p", { className: "eyebrow", text: "STEP 5 · 테스트넷 배포" }), el("h1", { text: "나만의 ERC-20 토큰을 만드세요." }), el("p", { className: "hero-lead", text: "선택한 기능만 포함한 OpenZeppelin 코드를 생성하고 Sepolia에 배포합니다." })),
+    el("section", { className: "page-hero" }, el("p", { className: "eyebrow", text: "STEP 4 · 테스트넷 배포" }), el("h1", { text: "나만의 ERC-20 토큰을 만드세요." }), el("p", { className: "hero-lead", text: "선택한 기능만 포함한 OpenZeppelin 코드를 생성하고 Sepolia에 배포합니다." })),
     el("section", { className: "section builder-layout" },
       el("div", { className: "builder-form card" }, el("h2", { text: "토큰 설정" }), field("Token Name", name), field("Token Symbol", symbol), field("Initial Supply", supply), field("Recipient Address", recipient), advanced, el("div", { className: "network-check" }, el("strong", { text: "Ethereum Sepolia" }), el("span", { text: "테스트넷 전용 · 개인키 입력 없음" })), el("div", { className: "button-row" }, compileButton, deployButton), status),
       el("div", { className: "generated-code" }, el("div", { className: "section-heading" }, el("div", {}, el("p", { className: "eyebrow", text: "GENERATED CONTRACT" }), el("h2", { text: "OpenZeppelin Solidity" }))), codeBlock),

@@ -49,7 +49,7 @@ export function renderCodeLabPage(store: AppStore): HTMLElement {
   const resetButton = button("코드 초기화", { className: "button button-secondary" });
   const compareButton = button("정답과 비교", { className: "button button-secondary" });
   return el("main", {},
-    el("section", { className: "page-hero" }, el("p", { className: "eyebrow", text: "STEP 4 · 코드 수정" }), el("h1", { text: "Solidity 코드를 직접 바꾸고 컴파일하세요." }), el("p", { className: "hero-lead", text: "교육용 구현을 한 줄씩 고쳐보세요. 마지막 코드는 이 브라우저에 자동 저장됩니다." })),
+    el("section", { className: "page-hero" }, el("p", { className: "eyebrow", text: "STEP 3 · 코드 확인 및 수정" }), el("h1", { text: "Solidity 코드를 직접 바꾸고 컴파일하세요." }), el("p", { className: "hero-lead", text: "교육용 구현을 한 줄씩 고쳐보세요. 마지막 코드는 이 브라우저에 자동 저장됩니다." })),
     el("section", { className: "section code-lab-layout" },
       el("aside", { className: "code-tasks card" }, el("h2", { text: "다섯 개 과제" }), el("p", { className: "warning-box", text: "교육용 구현입니다. 실제 서비스에는 OpenZeppelin을 사용하세요." }), tasks, hint),
       el("div", { className: "editor-column" }, editorHost, el("div", { className: "button-row" }, compileButton, compareButton, resetButton), output),

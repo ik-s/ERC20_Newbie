@@ -41,7 +41,7 @@ export function renderHomePage(state: AppState): HTMLElement {
     ),
     el("section", { className: "section roadmap-section" },
       el("div", { className: "section-heading" },
-        el("div", {}, el("p", { className: "eyebrow", text: "LEARNING ROADMAP" }), el("h2", { text: "다섯 단계면 ERC-20을 정복할 수 있습니다." })),
+        el("div", {}, el("p", { className: "eyebrow", text: "LEARNING ROADMAP" }), el("h2", { text: "네 단계면 ERC-20을 정복할 수 있습니다." })),
         el("div", { className: "progress-ring", attrs: { "aria-label": `학습 항목 ${done}개 완료` } },
           el("strong", { text: `${Math.min(100, Math.round((done / 12) * 100))}%` }),
           el("span", { text: "진행률" }),

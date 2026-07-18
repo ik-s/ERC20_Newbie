@@ -21,10 +21,25 @@ describe("ERC-20 Lab app", () => {
       "사용 권한을 승인한 뒤",
       "나만의 토큰을 Sepolia에 배포해보세요.",
     ]);
-    expect(document.querySelector(".roadmap-section h2")?.textContent).toBe("다섯 단계면 ERC-20을 정복할 수 있습니다.");
+    expect(document.querySelector(".roadmap-section h2")?.textContent).toBe("네 단계면 ERC-20을 정복할 수 있습니다.");
     expect(document.querySelector(".concept-teaser-title")?.textContent).toBe("하나의 규칙이 모든 토큰을 연결합니다.");
     expect(document.body.textContent).toContain("지갑 연결 없이 시작하기");
-    expect(document.querySelectorAll("[data-roadmap-step]")).toHaveLength(5);
+    expect([...document.querySelectorAll("[data-roadmap-step]")].map((step) => step.textContent)).toEqual([
+      "1이해하기",
+      "2함수 실습",
+      "3코드 확인 및 수정",
+      "4테스트넷 배포",
+    ]);
+  });
+
+  it("uses the merged four-step learning flow across later pages", () => {
+    const app = createApp(document.querySelector("#app")!);
+
+    app.render("/code-lab");
+    expect(document.querySelector(".page-hero .eyebrow")?.textContent).toBe("STEP 3 · 코드 확인 및 수정");
+
+    app.render("/token-builder");
+    expect(document.querySelector(".page-hero .eyebrow")?.textContent).toBe("STEP 4 · 테스트넷 배포");
   });
 
   it("renders each function lab with execution, state, and code controls", () => {
@@ -53,6 +68,14 @@ describe("ERC-20 Lab app", () => {
     expect(document.body.textContent).toContain("STEP 2 · 함수 실습");
     expect(document.body.textContent).toContain("THE SIX RULES");
     expect(document.querySelectorAll(".function-link")).toHaveLength(6);
+    expect([...document.querySelectorAll(".function-link-summary")].map((node) => node.textContent)).toEqual([
+      "토큰 전체 발행량을 조회합니다.",
+      "한 주소가 가진 토큰 수량을 조회합니다.",
+      "내 토큰을 내가 직접 보냅니다.",
+      "토큰을 보내지 않고 사용 권한만 기록합니다.",
+      "소유자와 spender 사이의 승인 수량을 조회합니다.",
+      "승인받은 토큰을 대신 보냅니다.",
+    ]);
     expect(document.body.textContent).toContain("1,000,000,000,000,000,000");
     expect(app.store.getState().persisted.progress.completedLessons).toContain("step-1");
   });
