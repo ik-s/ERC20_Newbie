@@ -79,6 +79,32 @@ describe("ERC-20 Lab app", () => {
     backSpy.mockRestore();
   });
 
+  it("explains Sepolia and OpenZeppelin with verified official resources", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/guide/sepolia-openzeppelin");
+
+    expect([...document.querySelectorAll("[data-guide-topic] h2")].map((heading) => heading.textContent)).toEqual([
+      "Sepolia",
+      "OpenZeppelin",
+    ]);
+    expect([...document.querySelectorAll(".deployment-flow-step")].map((step) => step.textContent)).toEqual([
+      "1ERC-20 코드 구성",
+      "2Solidity 컴파일",
+      "3Sepolia 배포",
+      "4지갑과 탐색기에서 확인",
+    ]);
+
+    const resourceLinks = [...document.querySelectorAll<HTMLAnchorElement>(".official-resource-link")];
+    expect(resourceLinks.map((link) => link.href)).toEqual([
+      "https://ethereum.org/developers/docs/networks/",
+      "https://docs.openzeppelin.com/contracts/5.x",
+    ]);
+    resourceLinks.forEach((link) => {
+      expect(link.target).toBe("_blank");
+      expect(link.rel).toBe("noreferrer noopener");
+    });
+  });
+
   it("renders each function lab with execution, state, and code controls", () => {
     const app = createApp(document.querySelector("#app")!);
     app.render("/functions/transfer");
