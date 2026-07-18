@@ -42,6 +42,43 @@ describe("ERC-20 Lab app", () => {
     expect(document.querySelector(".page-hero .eyebrow")?.textContent).toBe("STEP 4 · 테스트넷 배포");
   });
 
+  it("links the shared footer to the deployment basics guide", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/token-builder");
+
+    const guideLink = document.querySelector<HTMLAnchorElement>(".footer-guide-link");
+    expect(guideLink?.textContent).toBe("Sepolia와 OpenZeppelin 알아보기 →");
+    expect(guideLink?.getAttribute("href")).toBe("/guide/sepolia-openzeppelin");
+    expect(guideLink?.hasAttribute("data-link")).toBe(true);
+    expect(document.body.textContent).not.toContain("개인키와 복구 문구를 절대 입력하지 마세요.");
+  });
+
+  it("renders the deployment basics guide with an accessible home fallback", () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/guide/sepolia-openzeppelin");
+
+    expect(document.querySelector(".deployment-guide-hero .eyebrow")?.textContent).toBe("DEPLOYMENT BASICS");
+    expect(document.querySelector("h1")?.textContent).toBe("배포 전에 알아둘 두 가지");
+
+    const backLink = document.querySelector<HTMLAnchorElement>(".deployment-guide-back-link");
+    expect(backLink?.textContent).toBe("<");
+    expect(backLink?.getAttribute("href")).toBe("/");
+    expect(backLink?.getAttribute("aria-label")).toBe("이전 화면으로 돌아가기");
+  });
+
+  it("returns to browser history from the deployment basics guide", () => {
+    window.history.pushState({}, "", "/token-builder");
+    window.history.pushState({}, "", "/guide/sepolia-openzeppelin");
+    const backSpy = vi.spyOn(window.history, "back").mockImplementation(() => undefined);
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/guide/sepolia-openzeppelin");
+
+    document.querySelector<HTMLAnchorElement>(".deployment-guide-back-link")!.click();
+
+    expect(backSpy).toHaveBeenCalledOnce();
+    backSpy.mockRestore();
+  });
+
   it("renders each function lab with execution, state, and code controls", () => {
     const app = createApp(document.querySelector("#app")!);
     app.render("/functions/transfer");

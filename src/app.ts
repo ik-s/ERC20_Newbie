@@ -1,7 +1,7 @@
 import { renderHeader } from "./components/header";
 import { createRouter } from "./router";
 import { createStore } from "./state/store";
-import { el, replaceChildren } from "./utils/dom";
+import { el, replaceChildren, routeLink } from "./utils/dom";
 import { renderHomePage } from "./pages/homePage";
 import { renderLearnPage } from "./pages/learnPage";
 import { renderFunctionsPage } from "./pages/functionsPage";
@@ -10,6 +10,7 @@ import { connectInjectedWallet } from "./wallet/client";
 import { renderCodeLabPage } from "./pages/codeLabPage";
 import { renderTokenBuilderPage } from "./pages/tokenBuilderPage";
 import { renderMyTokenPage } from "./pages/myTokenPage";
+import { renderDeploymentBasicsPage } from "./pages/deploymentBasicsPage";
 
 export function createApp(root: Element) {
   const store = createStore();
@@ -36,7 +37,11 @@ export function createApp(root: Element) {
   const shell = () => el("div", { className: "app-shell" }, renderHeader(store.getState(), walletAction), content, live,
     el("footer", { className: "site-footer" },
       el("strong", { text: "ERC-20 Lab" }),
-      el("p", { text: "교육용 테스트넷 실습 서비스 · 개인키와 복구 문구를 절대 입력하지 마세요." }),
+      routeLink(
+        "Sepolia와 OpenZeppelin 알아보기 →",
+        "/guide/sepolia-openzeppelin",
+        "text-link footer-guide-link",
+      ),
     ),
   );
   replaceChildren(root, shell());
@@ -65,6 +70,7 @@ export function createApp(root: Element) {
     else if (path === "/code-lab") page = renderCodeLabPage(store);
     else if (path === "/token-builder") page = renderTokenBuilderPage(store, () => render("/token-builder"));
     else if (path === "/my-token") page = renderMyTokenPage(store);
+    else if (path === "/guide/sepolia-openzeppelin") page = renderDeploymentBasicsPage();
     else page = renderHomePage(state);
     replaceChildren(content, page);
     document.title = `${page.querySelector("h1")?.textContent ?? "ERC-20 Lab"} · ERC-20 Lab`;
