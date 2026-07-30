@@ -1,4 +1,6 @@
 import { COMPILER_TIMEOUT_MS, MAX_SOLIDITY_SOURCE_LENGTH } from "../config";
+import { openzeppelinSources } from "../generated/openzeppelinSources";
+import soljsonUrl from "solc/soljson.js?url";
 
 export interface CompilerDiagnostic {
   severity: "error" | "warning";
@@ -34,7 +36,7 @@ export function compileSolidity(source: string, signal?: AbortSignal): Promise<C
     return Promise.reject(new Error(`소스 코드는 ${MAX_SOLIDITY_SOURCE_LENGTH.toLocaleString()}자 이하여야 합니다.`));
   }
   return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL("../workers/solc.worker.ts", import.meta.url), { type: "module" });
+    const worker = new Worker(new URL("../workers/solc.worker.ts", import.meta.url));
     const timer = window.setTimeout(() => {
       worker.terminate();
       reject(new Error("컴파일 시간이 초과되었습니다. 코드를 줄이거나 다시 시도하세요."));
@@ -57,6 +59,6 @@ export function compileSolidity(source: string, signal?: AbortSignal): Promise<C
       worker.terminate();
       reject(new Error(event.message || "컴파일러를 시작하지 못했습니다."));
     });
-    worker.postMessage({ source });
+    worker.postMessage({ source, imports: openzeppelinSources, soljsonUrl });
   });
 }

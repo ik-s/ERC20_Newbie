@@ -41,4 +41,28 @@ describe("local persistence", () => {
 
     expect(loadPersistedState(storage)).toEqual(state);
   });
+
+  it("persists code lab drafts independently by mission", () => {
+    const storage = new MemoryStorage();
+    const state = createDefaultPersistedState();
+    state.codeLabDrafts.balance = "balance draft";
+    state.codeLabDrafts.transfer = "transfer draft";
+
+    savePersistedState(storage, state);
+
+    expect(loadPersistedState(storage).codeLabDrafts).toEqual({
+      balance: "balance draft",
+      transfer: "transfer draft",
+    });
+  });
+
+  it("migrates the legacy shared code lab source to the metadata mission", () => {
+    const storage = new MemoryStorage();
+    const legacy = createDefaultPersistedState() as unknown as Record<string, unknown>;
+    delete legacy.codeLabDrafts;
+    legacy.editedSource = "legacy source";
+    storage.setItem("erc20-lab:v1", JSON.stringify(legacy));
+
+    expect(loadPersistedState(storage).codeLabDrafts).toEqual({ metadata: "legacy source" });
+  });
 });

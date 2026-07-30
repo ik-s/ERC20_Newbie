@@ -9,6 +9,9 @@ export default defineConfig({
     sourcemap: true,
     chunkSizeWarningLimit: 800,
   },
+  worker: {
+    format: "iife",
+  },
   server: {
     port: 3000,
   },

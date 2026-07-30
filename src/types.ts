@@ -1,4 +1,5 @@
 import type { Address, Hash } from "viem";
+import type { CodeLabTaskId } from "./erc20/codeLabTasks";
 
 export interface LearningProgress {
   completedLessons: string[];
@@ -33,7 +34,7 @@ export interface DeploymentRecord {
 export interface PersistedState {
   progress: LearningProgress;
   tokenDraft: TokenDraft;
-  editedSource: string;
+  codeLabDrafts: Partial<Record<CodeLabTaskId, string>>;
   deployments: DeploymentRecord[];
   recentTransactionHashes: Hash[];
 }

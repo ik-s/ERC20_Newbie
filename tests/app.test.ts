@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createApp } from "../src/app";
+import { CODE_LAB_TASKS, getTaskStarterSource } from "../src/erc20/codeLabTasks";
 
 describe("ERC-20 Lab app", () => {
   beforeEach(() => {
@@ -40,6 +41,83 @@ describe("ERC-20 Lab app", () => {
 
     app.render("/token-builder");
     expect(document.querySelector(".page-hero .eyebrow")?.textContent).toBe("STEP 4 · 테스트넷 배포");
+  });
+
+  it("shows task-specific reference answers instead of a global source difference count", async () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/code-lab");
+    await Promise.resolve();
+
+    [...document.querySelectorAll<HTMLButtonElement>(".task-button")]
+      .find((button) => button.textContent === "1. 토큰 정보 수정")?.click();
+    [...document.querySelectorAll<HTMLButtonElement>(".button-secondary")]
+      .find((button) => button.textContent === "정답과 비교")?.click();
+
+    expect(document.body.textContent).toContain("기준 답안");
+    expect(document.body.textContent).toContain("토큰 이름");
+    expect(document.body.textContent).not.toContain("곳이 다릅니다");
+  });
+
+  it("makes every code lab task an actionable mission with progressive hints", async () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/code-lab");
+    await Promise.resolve();
+
+    [...document.querySelectorAll<HTMLButtonElement>(".task-button")]
+      .find((node) => node.textContent === "2. balanceOf 완성")?.click();
+
+    expect(document.querySelector(".task-objective")?.textContent)
+      .toBe("account 주소의 잔액을 반환하는 한 줄을 작성하세요.");
+    expect(document.querySelector(".editor-host")?.textContent)
+      .toContain("// TODO: account 주소의 잔액을 반환하세요.");
+
+    const hintButton = document.querySelector<HTMLButtonElement>(".hint-button")!;
+    expect(hintButton.textContent).toBe("힌트 1/3 보기");
+    hintButton.click();
+    expect(document.querySelector(".hint-box")?.textContent)
+      .toContain("특정 주소가 가진 토큰 수량");
+    expect(hintButton.textContent).toBe("힌트 2/3 보기");
+    hintButton.click();
+    hintButton.click();
+    expect(document.querySelector(".hint-box")?.textContent)
+      .toContain("return balances[ ... ];");
+    expect(hintButton.textContent).toBe("힌트를 모두 확인했습니다");
+    expect(hintButton.disabled).toBe(true);
+  });
+
+  it("keeps code lab drafts separate and resets only the active mission", async () => {
+    const app = createApp(document.querySelector("#app")!);
+    app.render("/code-lab");
+    await Promise.resolve();
+
+    const balanceDraft = getTaskStarterSource(CODE_LAB_TASKS[1]!).replace(
+      "// TODO: account 주소의 잔액을 반환하세요.",
+      "return balances[account]; // learner balance draft",
+    );
+    const transferDraft = getTaskStarterSource(CODE_LAB_TASKS[2]!).replace(
+      "// TODO: 받는 사람의 잔액을 늘리세요.",
+      "balances[to] += amount; // learner transfer draft",
+    );
+    app.store.update((state) => ({
+      ...state,
+      persisted: {
+        ...state.persisted,
+        codeLabDrafts: { balance: balanceDraft, transfer: transferDraft },
+      },
+    }));
+
+    const clickTask = (text: string) => [...document.querySelectorAll<HTMLButtonElement>(".task-button")]
+      .find((node) => node.textContent === text)?.click();
+    clickTask("2. balanceOf 완성");
+    expect(document.querySelector(".editor-host")?.textContent).toContain("learner balance draft");
+    clickTask("3. transfer 완성");
+    expect(document.querySelector(".editor-host")?.textContent).toContain("learner transfer draft");
+
+    [...document.querySelectorAll<HTMLButtonElement>(".button-secondary")]
+      .find((node) => node.textContent === "코드 초기화")?.click();
+    expect(app.store.getState().persisted.codeLabDrafts.transfer)
+      .toContain("// TODO: 받는 사람의 잔액을 늘리세요.");
+    expect(app.store.getState().persisted.codeLabDrafts.balance).toBe(balanceDraft);
   });
 
   it("links the shared footer to the deployment basics guide", () => {

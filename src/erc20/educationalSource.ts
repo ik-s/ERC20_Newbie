@@ -56,11 +56,3 @@ contract LearningToken {
     }
 }
 `;
-
-export const CODE_TASKS = [
-  { title: "토큰 정보 수정", hint: "name, symbol, constructor의 initialSupply를 찾아보세요." },
-  { title: "balanceOf 이해", hint: "주소를 key로 사용하는 balances 매핑에서 값을 읽습니다." },
-  { title: "transfer 이해", hint: "잔액 확인 → 감소 → 증가 → Transfer 이벤트 순서입니다." },
-  { title: "approve와 allowance", hint: "allowances[owner][spender]처럼 2단계 매핑을 사용합니다." },
-  { title: "transferFrom 이해", hint: "msg.sender의 allowance와 from의 balance를 모두 확인해야 합니다." },
-];

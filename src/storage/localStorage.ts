@@ -1,4 +1,5 @@
 import { STORAGE_KEY } from "../config";
+import type { CodeLabTaskId } from "../erc20/codeLabTasks";
 import { createDefaultTokenDraft } from "../erc20/tokenGenerator";
 import type { DeploymentRecord, PersistedState, TokenDraft } from "../types";
 
@@ -6,7 +7,7 @@ export function createDefaultPersistedState(): PersistedState {
   return {
     progress: { completedLessons: [], completedExercises: [], lastVisitedPath: "/" },
     tokenDraft: createDefaultTokenDraft(),
-    editedSource: "",
+    codeLabDrafts: {},
     deployments: [],
     recentTransactionHashes: [],
   };
@@ -47,7 +48,18 @@ const isDeployment = (value: unknown): value is DeploymentRecord => {
   );
 };
 
-function isPersistedState(value: unknown): value is PersistedState {
+const CODE_LAB_TASK_IDS: readonly CodeLabTaskId[] = ["metadata", "balance", "transfer", "allowance", "transfer-from"];
+
+function isCodeLabDrafts(value: unknown): value is Partial<Record<CodeLabTaskId, string>> {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      Object.entries(value).every(([key, draft]) => CODE_LAB_TASK_IDS.includes(key as CodeLabTaskId) && typeof draft === "string"),
+  );
+}
+
+function isPersistedStateBase(value: unknown): value is Omit<PersistedState, "codeLabDrafts"> & Record<string, unknown> {
   if (!value || typeof value !== "object") return false;
   const state = value as Record<string, unknown>;
   const progress = state.progress as Record<string, unknown> | undefined;
@@ -57,7 +69,6 @@ function isPersistedState(value: unknown): value is PersistedState {
       isStringArray(progress.completedExercises) &&
       typeof progress.lastVisitedPath === "string" &&
       isTokenDraft(state.tokenDraft) &&
-      typeof state.editedSource === "string" &&
       Array.isArray(state.deployments) &&
       state.deployments.every(isDeployment) &&
       isStringArray(state.recentTransactionHashes),
@@ -69,7 +80,20 @@ export function loadPersistedState(storage: Storage = localStorage): PersistedSt
     const raw = storage.getItem(STORAGE_KEY);
     if (!raw) return createDefaultPersistedState();
     const parsed: unknown = JSON.parse(raw);
-    return isPersistedState(parsed) ? parsed : createDefaultPersistedState();
+    if (!isPersistedStateBase(parsed)) return createDefaultPersistedState();
+    const state = parsed as Omit<PersistedState, "codeLabDrafts"> & { codeLabDrafts?: unknown; editedSource?: unknown };
+    const codeLabDrafts = isCodeLabDrafts(state.codeLabDrafts)
+      ? state.codeLabDrafts
+      : typeof state.editedSource === "string" && state.editedSource
+        ? { metadata: state.editedSource }
+        : {};
+    return {
+      progress: state.progress,
+      tokenDraft: state.tokenDraft,
+      codeLabDrafts,
+      deployments: state.deployments,
+      recentTransactionHashes: state.recentTransactionHashes,
+    };
   } catch {
     return createDefaultPersistedState();
   }
